@@ -1,0 +1,26 @@
+# https://editorconfig.org/
+
+root = true
+
+[*]
+indent_style = space
+indent_size = 4
+end_of_line = lf
+charset = utf-8
+insert_final_newline = true
+
+[*.md]
+trim_trailing_whitespace = false
+
+[{.*rc,*.yml,*.md,*.json,*.yaml}]
+indent_style = space
+
+[{*.svg}]
+indent_style = tab
+indent_size = 1
+
+[{*.json,.*.md}]
+indent_size = 2
+
+[{.*rc,*.yml,*.yaml}]
+indent_size = 4

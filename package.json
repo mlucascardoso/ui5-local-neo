@@ -1,0 +1,30 @@
+{
+  "name": "ui5-local-neo",
+  "version": "1.0.0-rc",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm run build:cjs && npm run build:esm",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "build:esm": "tsc -p tsconfig.esm.json",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mlucascardoso/ui5-local-neo.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mlucascardoso/ui5-local-neo/issues"
+  },
+  "homepage": "https://github.com/mlucascardoso/ui5-local-neo#readme",
+  "dependencies": {
+    "axios": "^0.19.2"
+  },
+  "devDependencies": {
+    "@types/node": "^14.0.14",
+    "typescript": "^3.9.6"
+  },
+  "peerDependencies": {}
+}

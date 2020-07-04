@@ -1,0 +1,9 @@
+./docs
+./esm
+./esm
+./src
+.editorconfig
+.gitignore
+tsconfig.base.json
+tsconfig.cjs.json
+tsconfig.esm.json
