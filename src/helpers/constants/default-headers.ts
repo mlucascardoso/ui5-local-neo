@@ -1,20 +1,21 @@
+import { HttpHeaderName } from '../enums/http-header-name';
 import allowedHeaders from './allowed-headers';
 
 export default [
     {
-        name: 'Access-Control-Allow-Origin',
+        name: HttpHeaderName.ACCESS_CONTROL_ALLOW_ORIGIN,
         value: '*',
     },
     {
-        name: 'Access-Control-Allow-Credentials',
+        name: HttpHeaderName.ACCESS_CONTROL_ALLOW_CREDENTIALS,
         value: 'true',
     },
     {
-        name: 'Access-Control-Allow-Methods',
+        name: HttpHeaderName.ACCESS_CONTROL_ALLOW_METHODS,
         value: 'GET,PUT,POST,DELETE',
     },
     {
-        name: 'Access-Control-Allow-Headers',
+        name: HttpHeaderName.ACCESS_CONTROL_ALLOW_HEADERS,
         value: allowedHeaders.join(','),
     },
 ];
