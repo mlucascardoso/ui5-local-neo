@@ -1,0 +1,7 @@
+specVersion: "1.0"
+kind: extension
+type: server-middleware
+metadata:
+  name: ui5-local-neo
+middleware:
+  path: lib/index.js
