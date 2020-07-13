@@ -1,3 +1,4 @@
+import { Request, Response, NextFunction } from 'express';
 import path from 'path';
 
 import { DestinationFactory } from './factories/destination';
@@ -10,7 +11,7 @@ const createMiddleware = (ui5MiddlewareOptions: Ui5MiddlewareOptions) => {
 
     const controller = DestinationFactory.assemble(routes, destinations);
 
-    return controller.handle;
+    return (req: Request, res: Response, next: NextFunction) => controller.handle(req, res, next);
 };
 
 module.exports = createMiddleware;

@@ -16,23 +16,26 @@ const applyCustomHeader = (response: Response, header: HttpHeader) => {
     if (!currentValue) {
         response.set(header.name, header.value);
     } else if (Array.isArray(currentValue)) {
-        response.set(header.name, [...currentValue, ...header.value]);
+        response.set(header.name, [...currentValue, header.value]);
     } else {
         response.set(header.name, [currentValue, header.value]);
     }
 };
 
-const createAuthorizationHeader = (destinations: Destinations, routeName: string): HttpHeader => {
-    const authHeader: HttpHeader = {};
-
+const createAuthorizationHeader = (destinations: Destinations, routeName: string): HttpHeader | {} => {
     const credentials = destinations[routeName].credentials;
     if (credentials) {
         const authorization = Base64.encode(`${credentials.user}:${credentials.password}`);
-        authHeader.name = HttpHeaderName.AUTHORIZATION;
-        authHeader.value = `Basic ${authorization}`;
+        const authHeader: HttpHeader = {
+            name: HttpHeaderName.AUTHORIZATION,
+            value: `Basic ${authorization}`,
+
+        };
+
+        return authHeader;
     }
 
-    return authHeader;
+    return {};
 };
 
 export {
