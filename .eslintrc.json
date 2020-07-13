@@ -16,6 +16,7 @@
         "@typescript-eslint"
     ],
     "rules": {
+        "guard-for-in": "off",
         "import-helpers/order-imports": [
             "warn",
             {

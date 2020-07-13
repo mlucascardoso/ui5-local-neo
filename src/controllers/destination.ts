@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 
-import { Controller, Destinations, NeoAppRoutes } from '../helpers/protocols';
+import { applyCustomHeader } from '../helpers/http/header';
+import { Controller, Destinations, NeoAppRoutes, HttpHeader } from '../helpers/protocols';
 import { SapUi5ResourcesService } from '../services/sap-ui5-resources';
 
 export class DestinationController implements Controller {
@@ -16,7 +17,23 @@ export class DestinationController implements Controller {
 
     async handle(request: Request, response: Response, next: NextFunction): Promise<void> {
         try {
-            console.log(this.sapUi5Service.isUi5Resource(request.url));
+            if (this.sapUi5Service.isUi5Resource(request.url)) {
+                const result = await this.sapUi5Service.handle(request, this.destinations.sapui5.uri);
+
+                for (const key in result.headers) {
+                    const header: HttpHeader = {
+                        name: key,
+                        value: result.headers[key],
+                    };
+
+                    applyCustomHeader(response, header);
+                }
+
+                response.status(200).send(result.data);
+            } else {
+
+            }
+
             next();
         } catch (err) {
             next(err);
