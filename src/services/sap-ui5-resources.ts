@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import Server, { createProxyServer } from 'http-proxy';
 
-import { Service, Destinations, NeoAppRoutes } from '../helpers/protocols';
+import { Service, Destinations } from '../helpers/protocols';
 export class SapUi5ResourcesService implements Service {
     private readonly proxyServer: Server = createProxyServer();
 
@@ -10,14 +10,10 @@ export class SapUi5ResourcesService implements Service {
         response: Response,
         next: NextFunction,
         destinations: Destinations,
-        routes: NeoAppRoutes[],
     ): Promise<void> {
-        console.log(request, response, destinations, routes);
-
-
         const endPoint = request.url.split('/resources/')[1];
         request.url = `/resources/${endPoint}`;
-        const proxyConfig = { target: 'https://sapui5.hana.ondemand.com', changeOrigin: true };
+        const proxyConfig = { target: destinations.sapui5.uri, changeOrigin: true };
 
         this.proxyServer.web(request, response, proxyConfig, (err: any) => {
             if (err) {
