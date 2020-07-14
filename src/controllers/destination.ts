@@ -19,7 +19,7 @@ export class DestinationController implements Controller {
         try {
             const resolver = this.getResolver(request.url);
             if (resolver) {
-                await resolver.handle(request, response, this.destinations, this.routes);
+                await resolver.handle(request, response, next, this.destinations, this.routes);
             } else {
                 next();
                 return;
