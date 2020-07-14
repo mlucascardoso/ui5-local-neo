@@ -24,25 +24,6 @@ export class DestinationController implements Controller {
                 next();
                 return;
             }
-            // const routeProxy = {
-            //     proxyConfig: {},
-            // };
-            // console.log('aq');
-
-            // if (this.sapUi5Service.isUi5Resource(request.url)) {
-            //     const endPoint = request.url.split('/resources/')[1];
-            //     const url = `/resources/${endPoint}`;
-            //     request.url = url;// this.sapUi5Service.getUrl(request);
-            //     routeProxy.proxyConfig = { target: 'https://sapui5.hana.ondemand.com', changeOrigin: true };
-            // } else {
-            //     next();
-            //     return;
-            // }
-            // this.proxyServer.web(request, response, routeProxy.proxyConfig, (err: any) => {
-            //     if (err) {
-            //         next(err);
-            //     }
-            // });
         } catch (err) {
             next(err);
         }
