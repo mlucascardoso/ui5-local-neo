@@ -24,10 +24,12 @@
   "dependencies": {
     "@ui5/cli": "^1.13.0",
     "axios": "^0.19.2",
+    "http-proxy": "^1.18.1",
     "js-base64": "^2.6.2"
   },
   "devDependencies": {
     "@types/express": "^4.17.6",
+    "@types/http-proxy": "^1.17.4",
     "@types/js-base64": "^2.3.2",
     "@types/node": "^14.0.14",
     "@typescript-eslint/eslint-plugin": "^3.3.0",

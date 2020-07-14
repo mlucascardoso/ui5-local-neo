@@ -1,20 +1,20 @@
-import { AxiosResponse } from 'axios';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 
-import { createGetRequest, sendRequest } from '../helpers/http/request';
+import { Service, Destinations, NeoAppRoutes } from '../helpers/protocols';
+export class SapUi5ResourcesService implements Service {
+    private readonly proxyServer: any;
 
-export class SapUi5ResourcesService {
-    async handle(request: Request, destinationUri: string): Promise<AxiosResponse> {
-        const endPoint = request.url.split('/resources/')[1];
-        const url = `${destinationUri}/${endPoint}`;
+    async handle(
+        request: Request,
+        response: Response,
+        destinations: Destinations,
+        routes: NeoAppRoutes[],
+    ): Promise<void> {
+        console.log(request, response, destinations, routes);
 
-        const req = createGetRequest(url, []);
-        const response = await sendRequest(req);
-
-        return response;
-    }
-
-    isUi5Resource(url: string): boolean {
-        return url.includes('/resources/');
+        //     const endPoint = request.url.split('/resources/')[1];
+        //     const url = `/resources/${endPoint}`;
+        //     request.url = url;// this.sapUi5Service.getUrl(request);
+        //     routeProxy.proxyConfig = { target: 'https://sapui5.hana.ondemand.com', changeOrigin: true };
     }
 }

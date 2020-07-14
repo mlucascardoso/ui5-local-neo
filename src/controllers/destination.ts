@@ -1,42 +1,64 @@
 import { Request, Response, NextFunction } from 'express';
 
-import { applyCustomHeader } from '../helpers/http/header';
-import { Controller, Destinations, NeoAppRoutes, HttpHeader } from '../helpers/protocols';
-import { SapUi5ResourcesService } from '../services/sap-ui5-resources';
+import { Controller, Destinations, NeoAppRoutes, Resolver, Service } from '../helpers/protocols';
 
 export class DestinationController implements Controller {
     private readonly routes: NeoAppRoutes[];
     private readonly destinations: Destinations;
-    private readonly sapUi5Service: SapUi5ResourcesService;
+    private readonly resolvers: Resolver[] = [];
+    private readonly sapUi5Service: Service;
 
-    constructor(routes: NeoAppRoutes[], destinations: Destinations, sapUi5Service: SapUi5ResourcesService) {
+    constructor(routes: NeoAppRoutes[], destinations: Destinations, sapUi5Service: Service) {
         this.routes = routes;
         this.destinations = destinations;
         this.sapUi5Service = sapUi5Service;
+        this.initRouteResolvers();
     }
 
     async handle(request: Request, response: Response, next: NextFunction): Promise<void> {
         try {
-            if (this.sapUi5Service.isUi5Resource(request.url)) {
-                const result = await this.sapUi5Service.handle(request, this.destinations.sapui5.uri);
-
-                for (const key in result.headers) {
-                    const header: HttpHeader = {
-                        name: key,
-                        value: result.headers[key],
-                    };
-
-                    applyCustomHeader(response, header);
-                }
-
-                response.status(200).send(result.data);
+            const resolver = this.getResolver(request.url);
+            if (resolver) {
+                await resolver.handle(request, response, this.destinations, this.routes);
             } else {
-
+                next();
+                return;
             }
+            // const routeProxy = {
+            //     proxyConfig: {},
+            // };
+            // console.log('aq');
 
-            next();
+            // if (this.sapUi5Service.isUi5Resource(request.url)) {
+            //     const endPoint = request.url.split('/resources/')[1];
+            //     const url = `/resources/${endPoint}`;
+            //     request.url = url;// this.sapUi5Service.getUrl(request);
+            //     routeProxy.proxyConfig = { target: 'https://sapui5.hana.ondemand.com', changeOrigin: true };
+            // } else {
+            //     next();
+            //     return;
+            // }
+            // this.proxyServer.web(request, response, routeProxy.proxyConfig, (err: any) => {
+            //     if (err) {
+            //         next(err);
+            //     }
+            // });
         } catch (err) {
             next(err);
+        }
+    }
+
+    initRouteResolvers() {
+        this.resolvers.push({
+            '/resources/': this.sapUi5Service,
+        });
+    }
+
+    getResolver(url: string): Service | undefined {
+        for (const resolver of this.resolvers) {
+            if (url.includes(Object.keys(resolver)[0])) {
+                return resolver[Object.keys(resolver)[0]];
+            }
         }
     }
 };
