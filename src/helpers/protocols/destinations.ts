@@ -1,9 +1,9 @@
-interface DestinationOptions {
+export interface DestinationOptions {
     uri: string
     credentials?: DestinationCredentials
 }
 
-interface DestinationCredentials {
+export interface DestinationCredentials {
     user: string
     password: string
 }

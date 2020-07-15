@@ -9,6 +9,6 @@ export interface Service<T = any> {
         response: Response,
         next: NextFunction,
         destinations: Destinations,
-        routes?: NeoAppRoutes[]
+        routes: NeoAppRoutes[]
     ) => Promise<T>
 }
