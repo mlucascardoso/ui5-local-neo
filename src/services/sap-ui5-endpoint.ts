@@ -1,4 +1,4 @@
-import { Method, AxiosError } from 'Axios';
+import { Method } from 'Axios';
 import { Request, Response, NextFunction } from 'express';
 
 import { HttpHeader } from '../helpers/http/header';
