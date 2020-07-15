@@ -37,10 +37,15 @@ export class SapUi5EndpointService implements Service {
                     const routeCredentials = routeDestination.credentials;
                     const routeUri = routeDestination.uri;
                     const routeParams = requestUrl.split(route.path)[1];
+                    const routeHeaders = request.headers;
 
-                    // talvez tenha que aplicar alguns headers do request no request data tbm
+                    const authHeaders = HttpHeader.createAuthorization(routeCredentials);
+                    const genericHeadaers = HttpHeader.createFromObject(routeHeaders);
+                    const requestHeaders = {
+                        ...genericHeadaers,
+                        ...authHeaders,
+                    };
 
-                    const requestHeaders = HttpHeader.createAuthorization(routeCredentials);
                     const requestData = HttpRequest.create({
                         url: `${routeUri}${routeEntryPath}${routeParams}`,
                         method: requestMethod,
@@ -57,9 +62,13 @@ export class SapUi5EndpointService implements Service {
 
                     response.status(responseObject.status).send(responseObject.data);
                 } catch (error) {
-                    const errorResponse = error.response;
-                    const status = errorResponse.status || 500;
-                    const statusText = errorResponse.statusText || '';
+                    let status = 500;
+                    let statusText = 'UI5 Error';
+
+                    if (error.response.status) {
+                        status = error.response.status;
+                        statusText = error.response.statusText;
+                    };
 
                     response.status(status).send(statusText);
                 }

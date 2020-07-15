@@ -2,8 +2,9 @@ import { Response } from 'express';
 import { Base64 } from 'js-base64';
 
 import defaultHeaders from '../constants/default-headers';
+import mappableHeaders from '../constants/mappable-headers';
 import { DestinationCredentials } from '../protocols/destinations';
-import { HttpHeaders, HttpHeadersKey, HttpHeadersProperty } from '../protocols/http';
+import { HttpHeaders, HttpHeadersKey, HttpHeadersProperty, HttpFullHeaders } from '../protocols/http';
 
 export class HttpHeader {
     static applyDefault(response: Response) {
@@ -32,5 +33,15 @@ export class HttpHeader {
             };
         }
         return {};
+    }
+
+    static createFromObject(httpHeader: HttpHeaders): HttpHeaders {
+        const mappedHttpHeader: any = {};
+        for (const prop in httpHeader) {
+            if (mappableHeaders.indexOf(prop) !== -1) {
+                mappedHttpHeader[prop] = (httpHeader as HttpFullHeaders)[prop];
+            }
+        }
+        return mappedHttpHeader as HttpHeaders;
     }
 }
