@@ -41,11 +41,15 @@ export class SapUi5EndpointService implements Service {
 
                     const requestUrl = HttpRequest.url(routeUri, routeEntryPath, routeParams);
                     const authHeaders = HttpHeader.createAuthorization(routeCredentials);
-                    const genericHeadaers = HttpHeader.createFromObject(routeHeaders);
+                    const genericHeaders = HttpHeader.createGenericsFromHeader(routeHeaders);
                     const requestHeaders = {
-                        ...genericHeadaers,
+                        ...genericHeaders,
                         ...authHeaders,
                     };
+
+                    console.log('================');
+                    console.log(request.url);
+                    console.log(requestHeaders);
 
                     const requestData = HttpRequest.create({
                         url: requestUrl,

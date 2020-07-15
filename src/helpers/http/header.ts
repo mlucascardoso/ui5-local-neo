@@ -35,13 +35,23 @@ export class HttpHeader {
         return {};
     }
 
-    static createFromObject(httpHeader: HttpHeaders): HttpHeaders {
+    static createGenericsFromHeader(httpHeader: HttpHeaders): HttpHeaders {
+        const lowerMappable = mappableHeaders.map((header: string) => header.toLowerCase());
+        const httpHeaderKeys = Object.keys(httpHeader);
         const mappedHttpHeader: any = {};
-        for (const prop in httpHeader) {
-            if (mappableHeaders.indexOf(prop) !== -1) {
-                mappedHttpHeader[prop] = (httpHeader as HttpFullHeaders)[prop];
+
+        for (const key of httpHeaderKeys) {
+            const lowerKey = key.toLowerCase();
+            const lowerIndex = lowerMappable.indexOf(lowerKey);
+            const propExists = lowerIndex !== -1;
+
+            if (propExists) {
+                const propName = mappableHeaders[lowerIndex];
+                const propValue = (httpHeader as HttpFullHeaders)[key];
+                mappedHttpHeader[propName] = propValue;
             }
         }
+
         return mappedHttpHeader as HttpHeaders;
     }
 }
