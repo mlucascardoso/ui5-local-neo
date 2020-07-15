@@ -2,44 +2,35 @@ import { Response } from 'express';
 import { Base64 } from 'js-base64';
 
 import defaultHeaders from '../constants/default-headers';
-import { HttpHeaderName } from '../enums/http-header-name';
-import { HttpHeader, Destinations } from '../protocols';
+import { DestinationCredentials } from '../protocols/destinations';
+import { HttpHeaders, HttpHeadersKey, HttpHeadersProperty } from '../protocols/http';
 
-const applyDefaultHeaders = (response: Response) => {
-    for (const header of defaultHeaders) {
-        applyCustomHeader(response, header);
-    }
-};
+export class HttpHeader {
+    static applyDefault(response: Response) {
+        for (const header of defaultHeaders) {
+            HttpHeader.applyProperty(response, header.name, header.value);
+        }
+    };
 
-const applyCustomHeader = (response: Response, header: HttpHeader) => {
-    const currentValue = response.get(header.name);
-    if (!currentValue) {
-        response.set(header.name, header.value);
-    } else if (Array.isArray(currentValue)) {
-        response.set(header.name, [...currentValue, header.value]);
-    } else {
-        response.set(header.name, [currentValue, header.value]);
-    }
-};
-
-const createAuthorizationHeader = (destinations: Destinations, routeName: string): HttpHeader | {} => {
-    const credentials = destinations[routeName].credentials;
-    if (credentials) {
-        const authorization = Base64.encode(`${credentials.user}:${credentials.password}`);
-        const authHeader: HttpHeader = {
-            name: HttpHeaderName.AUTHORIZATION,
-            value: `Basic ${authorization}`,
-
-        };
-
-        return authHeader;
+    static applyProperty(response: Response, name: HttpHeadersKey, value: HttpHeadersProperty): void {
+        const currentValue = response.get(name);
+        if (!currentValue) {
+            response.set(name, value);
+        } else if (Array.isArray(currentValue)) {
+            response.set(name, [...currentValue, value]);
+        } else {
+            response.set(name, [currentValue, value]);
+        }
     }
 
-    return {};
-};
-
-export {
-    applyCustomHeader,
-    applyDefaultHeaders,
-    createAuthorizationHeader,
-};
+    static createAuthorization(credentials?: DestinationCredentials): HttpHeaders {
+        if (credentials) {
+            const authentication = `${credentials.user}:${credentials.password}`;
+            const authorization = `Basic ${Base64.encode(authentication)}`;
+            return {
+                'Authorization': authorization,
+            };
+        }
+        return {};
+    }
+}

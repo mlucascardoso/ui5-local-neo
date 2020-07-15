@@ -6,13 +6,21 @@ export class DestinationController implements Controller {
     private readonly routes: NeoAppRoutes[];
     private readonly destinations: Destinations;
     private readonly resolvers: Resolver[] = [];
-    private readonly sapUi5Service: Service;
+    private readonly sapUi5ResourcesService: Service;
+    private readonly sapUi5EndpointService: Service;
 
-    constructor(routes: NeoAppRoutes[], destinations: Destinations, sapUi5Service: Service) {
+    constructor(
+        routes: NeoAppRoutes[],
+        destinations: Destinations,
+        sapUi5ResourcesService: Service,
+        sapUi5EndpointService: Service,
+    ) {
         this.routes = routes;
         this.destinations = destinations;
-        this.sapUi5Service = sapUi5Service;
+        this.sapUi5ResourcesService = sapUi5ResourcesService;
+        this.sapUi5EndpointService = sapUi5EndpointService;
         this.initRouteResolvers();
+        this.initNeoAppRoutes();
     }
 
     async handle(request: Request, response: Response, next: NextFunction): Promise<void> {
@@ -31,8 +39,18 @@ export class DestinationController implements Controller {
 
     initRouteResolvers() {
         this.resolvers.push({
-            '/resources/': this.sapUi5Service,
+            '/resources/': this.sapUi5ResourcesService,
         });
+    }
+
+    initNeoAppRoutes() {
+        for (const route of this.routes) {
+            if (!route.path.includes('resources')) {
+                const resolver: Resolver = {};
+                resolver[route.path] = this.sapUi5EndpointService;
+                this.resolvers.push(resolver);
+            }
+        }
     }
 
     getResolver(url: string): Service | undefined {
