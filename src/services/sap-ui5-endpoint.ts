@@ -14,17 +14,17 @@ export class SapUi5EndpointService implements Service {
         destinations: Destinations,
         routes: NeoAppRoutes[],
     ): Promise<void> {
-        const requestMethod = request.method as Method;
-        const requestUrl = request.path;
+        const requestedMethod = request.method as Method;
+        const requestedUrl = request.url;
 
         HttpHeader.applyDefault(response);
 
-        if (HttpResponse.isBypassableMethod(requestMethod)) {
+        if (HttpResponse.isBypassableMethod(requestedMethod)) {
             return HttpResponse.bypassOkResponse(response, next);
         }
 
         for (const route of routes) {
-            if (requestUrl.includes(route.path)) {
+            if (requestedUrl.includes(route.path)) {
                 try {
                     const routeName = route.target.name;
                     const routeEntryPath = route.target.entryPath;
@@ -36,9 +36,10 @@ export class SapUi5EndpointService implements Service {
 
                     const routeCredentials = routeDestination.credentials;
                     const routeUri = routeDestination.uri;
-                    const routeParams = requestUrl.split(route.path)[1];
+                    const routeParams = requestedUrl.split(route.path)[1];
                     const routeHeaders = request.headers;
 
+                    const requestUrl = HttpRequest.url(routeUri, routeEntryPath, routeParams);
                     const authHeaders = HttpHeader.createAuthorization(routeCredentials);
                     const genericHeadaers = HttpHeader.createFromObject(routeHeaders);
                     const requestHeaders = {
@@ -47,8 +48,8 @@ export class SapUi5EndpointService implements Service {
                     };
 
                     const requestData = HttpRequest.create({
-                        url: `${routeUri}${routeEntryPath}${routeParams}`,
-                        method: requestMethod,
+                        url: requestUrl,
+                        method: requestedMethod,
                         data: request.body,
                         headers: requestHeaders,
                     });
