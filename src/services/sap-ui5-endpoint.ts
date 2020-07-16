@@ -4,7 +4,14 @@ import { Request, Response, NextFunction } from 'express';
 import { HttpHeader } from '../helpers/http/header';
 import { HttpRequest } from '../helpers/http/request';
 import { HttpResponse } from '../helpers/http/response';
-import { Destinations, Service, NeoAppRoutes, DestinationOptions, handledStatus, handledRequestData } from '../helpers/protocols';
+import {
+    Destinations,
+    Service,
+    NeoAppRoutes,
+    DestinationOptions,
+    handledStatus,
+    handledRequestData,
+} from '../helpers/protocols';
 
 export class SapUi5EndpointService implements Service {
     async handle(
