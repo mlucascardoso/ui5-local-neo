@@ -22,8 +22,10 @@
   },
   "homepage": "https://github.com/mlucascardoso/ui5-local-neo#readme",
   "dependencies": {
+    "@types/co-body": "^5.1.0",
     "@ui5/cli": "^1.13.0",
     "axios": "^0.19.2",
+    "co-body": "^6.0.0",
     "http-proxy": "^1.18.1",
     "js-base64": "^2.6.2"
   },
