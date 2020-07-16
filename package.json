@@ -1,6 +1,6 @@
 {
   "name": "ui5-local-neo",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Middleware app to run ui5 applications with neo environment",
   "main": "lib/index.js",
   "scripts": {

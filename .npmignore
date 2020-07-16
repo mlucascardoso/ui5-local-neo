@@ -1,5 +1,5 @@
-./esm
-./src
+esm
+src
 .editorconfig
 .eslintignore
 .eslintrc.json
@@ -7,3 +7,4 @@
 tsconfig.base.json
 tsconfig.cjs.json
 tsconfig.esm.json
+tsconfig.umd.json
