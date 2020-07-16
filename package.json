@@ -1,7 +1,7 @@
 {
   "name": "ui5-local-neo",
   "version": "1.0.0-rc",
-  "description": "",
+  "description": "Middleware app to run ui5 applications with neo environment",
   "main": "lib/index.js",
   "scripts": {
     "build": "npm run build:cjs",
@@ -16,6 +16,13 @@
     "name": "Lucas Medeiros Cardoso",
     "email": "clucasmedeiros@gmail.com"
   },
+  "contributors": [
+      {
+          "name": "Nathan Botelho",
+          "email": "nimbotelho@gmail.com",
+          "url": "https://github.com/notelho"
+      }
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/mlucascardoso/ui5-local-neo/issues"

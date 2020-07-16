@@ -1,9 +1,7 @@
-import { Method, AxiosRequestConfig, AxiosError } from 'Axios';
+import { Method, AxiosRequestConfig, AxiosError } from 'axios';
 import { Request, Response, NextFunction } from 'express';
 
-import { HttpHeader } from '../helpers/http/header';
-import { HttpRequest } from '../helpers/http/request';
-import { HttpResponse } from '../helpers/http/response';
+import { HttpHeader, HttpRequest, HttpResponse } from '../helpers/http';
 import {
     Destinations,
     Service,
@@ -27,42 +25,33 @@ export class SapUi5EndpointService implements Service {
 
         HttpHeader.applyDefault(response);
 
-        if (HttpResponse.isBypassableMethod(requestedMethod)) {
-            return HttpResponse.bypassOkResponse(response, next);
+        const matchedRoute = this.findMatchedRoute(routes, requestedUrl);
+        const routeName = matchedRoute.target.name;
+        const destination = destinations[routeName];
+
+        if (!destination) {
+            return HttpResponse.bypassEmptyResponse(next);
         }
 
-        for (const route of routes) {
-            if (requestedUrl.includes(route.path)) {
-                const routeName = route.target.name;
-                const destination = destinations[routeName];
+        const { requestUrl, requestHeaders } = this.getRequestData(
+            request,
+            destination,
+            matchedRoute,
+        );
 
-                if (!destination) {
-                    return HttpResponse.bypassEmptyResponse(next);
-                }
+        const requestData = HttpRequest.create({
+            url: requestUrl,
+            headers: requestHeaders,
+            method: requestedMethod,
+            data: requestedData,
+        });
 
-                const { requestUrl, requestHeaders } = this.getRequestData(
-                    request,
-                    destination,
-                    route,
-                );
+        const { statusCode, statusText } = await this.getDestinationData(
+            response,
+            requestData,
+        );
 
-                const requestData = HttpRequest.create({
-                    url: requestUrl,
-                    headers: requestHeaders,
-                    method: requestedMethod,
-                    data: requestedData,
-                });
-
-                const { statusCode, statusText } = await this.getDestinationData(
-                    response,
-                    requestData,
-                );
-
-                response.status(statusCode).send(statusText);
-
-                break;
-            }
-        }
+        response.status(statusCode).send(statusText);
     }
 
     private async getDestinationData(response: Response, requestData: AxiosRequestConfig): Promise<handledStatus> {
@@ -114,5 +103,32 @@ export class SapUi5EndpointService implements Service {
             statusCode,
             statusText,
         };
+    }
+
+    private findMatchedRoute(routes: NeoAppRoutes[], requestedUrl: string): NeoAppRoutes {
+        let matchedRoute = this.initMatchedRoute();
+        for (const route of routes) {
+            if (requestedUrl.includes(route.path)) {
+                if (matchedRoute.path.length < route.path.length) {
+                    matchedRoute = route;
+                }
+            }
+        }
+
+        return matchedRoute;
+    }
+
+    private initMatchedRoute(): NeoAppRoutes {
+        const matchedRoute: NeoAppRoutes = {
+            description: '',
+            path: '',
+            target: {
+                entryPath: '',
+                name: '',
+                type: '',
+            },
+        };
+
+        return matchedRoute;
     }
 }

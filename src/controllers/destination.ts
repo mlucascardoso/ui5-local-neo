@@ -1,5 +1,7 @@
+import { Method } from 'axios';
 import { Request, Response, NextFunction } from 'express';
 
+import { HttpResponse } from '../helpers/http';
 import { Controller, Destinations, NeoAppRoutes, Resolver, Service } from '../helpers/protocols';
 
 export class DestinationController implements Controller {
@@ -25,6 +27,11 @@ export class DestinationController implements Controller {
 
     async handle(request: Request, response: Response, next: NextFunction): Promise<void> {
         try {
+            const requestedMethod = request.method as Method;
+            if (HttpResponse.isBypassableMethod(requestedMethod)) {
+                return HttpResponse.bypassOkResponse(response, next);
+            }
+
             const resolver = this.getResolver(request.url);
             if (resolver) {
                 await resolver.handle(request, response, next, this.destinations, this.routes);

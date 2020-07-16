@@ -1,8 +1,8 @@
-./docs
-./esm
 ./esm
 ./src
 .editorconfig
+.eslintignore
+.eslintrc.json
 .gitignore
 tsconfig.base.json
 tsconfig.cjs.json
