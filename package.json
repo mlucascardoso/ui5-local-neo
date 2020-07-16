@@ -1,6 +1,6 @@
 {
   "name": "ui5-local-neo",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Middleware app to run ui5 applications with neo environment",
   "main": "lib/index.js",
   "scripts": {
@@ -49,5 +49,13 @@
     "git-commit-msg-linter": "^2.4.2",
     "husky": "^4.2.5",
     "typescript": "^3.9.6"
-  }
+  },
+  "keywords": [
+    "neo",
+    "neo environment",
+    "sap ui5 middleware",
+    "ui5",
+    "sap",
+    "sap ui5 neo environemnt support"
+  ]
 }
