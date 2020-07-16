@@ -15,6 +15,7 @@ export class SapUi5EndpointService implements Service {
         routes: NeoAppRoutes[],
     ): Promise<void> {
         const requestedMethod = request.method as Method;
+        const requestedData = request.body;
         const requestedUrl = request.url;
 
         HttpHeader.applyDefault(response);
@@ -47,9 +48,8 @@ export class SapUi5EndpointService implements Service {
                         ...authHeaders,
                     };
 
-                    console.log('================');
-                    console.log(request.url);
-                    console.log(requestHeaders);
+
+                    console.log(requestedData);
 
                     const requestData = HttpRequest.create({
                         url: requestUrl,
