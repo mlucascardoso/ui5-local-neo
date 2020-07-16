@@ -17,11 +17,11 @@
     "email": "clucasmedeiros@gmail.com"
   },
   "contributors": [
-      {
-          "name": "Nathan Botelho",
-          "email": "nimbotelho@gmail.com",
-          "url": "https://github.com/notelho"
-      }
+    {
+      "name": "Nathan Botelho",
+      "email": "nimbotelho@gmail.com",
+      "url": "https://github.com/notelho"
+    }
   ],
   "license": "MIT",
   "bugs": {
